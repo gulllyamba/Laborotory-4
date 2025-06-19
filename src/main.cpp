@@ -72,7 +72,7 @@ int main() {
     // Where->InOrder([](const int& value) {std::cout << value << " ";});
     // std::cout << "\n\n";
 
-    // std::string s = "10, 20, 30, 40, 50";
+    // std::string s = "10 20 30 40 50";
     // AVL_Tree<int>* fromString = AVL_Tree<int>::fromString(s);
     // std::cout << "fromString: ";
     // fromString->InOrder([](const int& value) {std::cout << value << " ";});
@@ -223,7 +223,7 @@ int main() {
     // std::function<int(int, int)> foo = [](int x1, int x2) ->int {return 2 * x1 + 3 * x2;};
     // std::cout << "Reduce: " << Map->Reduce(foo, 4) << "\n\n";
 
-    // std::string s = "10, 20, 10, 30, 40";
+    // std::string s = "10 20 10 30 40";
     // Set<int>* fromString = Set<int>::fromString(s);
     // std::cout << "fromString: " << fromString->toString() << "\n";
     

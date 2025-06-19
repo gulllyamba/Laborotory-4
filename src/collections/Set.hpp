@@ -155,15 +155,10 @@ class Set : public IEnumerable<T> {
         static Set<T>* fromString(const std::string& data) {
             Set<T>* result = new Set<T>();
             std::istringstream iss(data);
-            char c;
             T value;
-            if (iss >> value) {
+            while (iss >> value) {
                 result->Insert(value);
-                while (iss >> c >> value) {
-                    if (c != ',') break;
-                    result->Insert(value);
-                }
-            }    
+            }
             return result;
         }
 

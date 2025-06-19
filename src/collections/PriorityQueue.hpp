@@ -222,7 +222,7 @@ class PriorityQueue : public IEnumerable<T> {
                 p = p->right;
             }
             T result = p->value;
-            Remove(p->key);
+            Remove(p->value, p->key);
             return result;
         }
 

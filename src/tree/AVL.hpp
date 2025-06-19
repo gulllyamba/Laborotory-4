@@ -518,20 +518,16 @@ class AVL_Tree : public Tree<T>, public IEnumerable<T> {
         static AVL_Tree<T>* fromString(const std::string& data) {
             AVL_Tree<T>* result = new AVL_Tree<T>();
             std::istringstream iss(data);
-            char c;
             T value;
-            if (iss >> value) {
+            while (iss >> value) {
                 result->Insert(value);
-                while (iss >> c >> value) {
-                    if (c != ',') break;
-                    result->Insert(value);
-                }
             }
             return result;
         }
 
         std::string toString(BypassType order = BypassType::InOrder) const {
             std::ostringstream oss;
+            oss << "[";
             switch (order) {
                 case BypassType::PreOrder : {
                     PreOrder([&oss](const T& value) {oss << value << " ";});
@@ -560,6 +556,7 @@ class AVL_Tree : public Tree<T>, public IEnumerable<T> {
                 default:
                     throw std::invalid_argument("Unknown Bypass type");
             }
+            oss << "]";
             return oss.str();
         }
 
