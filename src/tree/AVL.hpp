@@ -32,7 +32,7 @@ template <typename T, bool IsConst>
 class TreeIterator : public IIterator<T, IsConst> {
     public:
         using value_type = typename IIterator<T, IsConst>::value_type;
-        using pointer = std::conditional_t<IsConst, const T*, T*>;
+        using pointer = typename IIterator<T, IsConst>::pointer;
         using reference = typename IIterator<T, IsConst>::reference;
         using difference_type = typename IIterator<T, IsConst>::difference_type;
         using iterator_category = std::bidirectional_iterator_tag;
@@ -120,10 +120,6 @@ class TreeIterator : public IIterator<T, IsConst> {
             if (!current) {
                 throw std::out_of_range("Iterator out of range");
             }
-            if (current == tree->FindMax(tree->root)) {
-                current = nullptr;
-                return;
-            }
             if (current->right) {
                 current = current->right;
                 while (current->left) {
@@ -144,14 +140,7 @@ class TreeIterator : public IIterator<T, IsConst> {
                 if (!tree || !tree->root) {
                     throw std::out_of_range("Iterator out of range");
                 }
-                current = tree->root;
-                while (current->right) {
-                    current = current->right;
-                }
-                return;
-            }
-            if (current == tree->FindMin(tree->root)) {
-                current = nullptr;
+                current = tree->FindMax(tree->root);
                 return;
             }
             if (current->left) {
@@ -587,7 +576,6 @@ class AVL_Tree : public Tree<T>, public IEnumerable<T> {
         friend class TreeIterator;
 
         void UpdateParent(Node<T>* node, Node<T>* newParent) {
-            if (node == root) node->parent = nullptr;
             if (node) {
                 node->parent = newParent;
             }

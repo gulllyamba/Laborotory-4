@@ -17,7 +17,7 @@ template <typename T, bool IsConst>
 class ArrayIterator : public IIterator<T, IsConst> {
     public:
         using value_type = typename IIterator<T, IsConst>::value_type;
-        using pointer = std::conditional_t<IsConst, const T*, T*>;
+        using pointer = typename IIterator<T, IsConst>::pointer;
         using reference = typename IIterator<T, IsConst>::reference;
         using difference_type = typename IIterator<T, IsConst>::difference_type;
         using iterator_category = std::random_access_iterator_tag;
@@ -174,13 +174,13 @@ class DynamicArray : public Container<T>, public IEnumerable<T> {
 
         void Reserve(int newCapacity);
         void Append(const T& value) override;
-        void Append(const T&& value) override;
+        void Append(T&& value) override;
         void Prepend(const T& value) override;
-        void Prepend(const T&& value) override;
+        void Prepend(T&& value) override;
         void Set(int index, const T& value) override;
-        void Set(int index, const T&& value) override;
+        void Set(int index, T&& value) override;
         void InsertAt(int index, const T& value) override;
-        void InsertAt(int index, const T&& value) override;
+        void InsertAt(int index, T&& value) override;
         void Resize(int size) override;
         void RemoveAt(int index) override;
 
@@ -331,7 +331,7 @@ void DynamicArray<T>::Append(const T& value) {
 }
 
 template <typename T>
-void DynamicArray<T>::Append(const T&& value) {
+void DynamicArray<T>::Append(T&& value) {
     if (Size >= capacity) Reserve((capacity == 0) ? 1 : capacity * 2);
     Data[Size] = std::move(value);
     Size++;
@@ -343,7 +343,7 @@ void DynamicArray<T>::Prepend(const T& value) {
 }
 
 template <typename T>
-void DynamicArray<T>::Prepend(const T&& value) {
+void DynamicArray<T>::Prepend(T&& value) {
     InsertAt(0, std::move(value));
 }
 
@@ -355,7 +355,7 @@ void DynamicArray<T>::Set(int index, const T& value) {
 }
 
 template <typename T>
-void DynamicArray<T>::Set(int index, const T&& value) {
+void DynamicArray<T>::Set(int index, T&& value) {
     if (!Data || Size <= 0) throw std::out_of_range("Array is empty");
     if (index >= Size || index < 0) throw std::out_of_range("Index out of range");
     Data[index] = std::move(value);
@@ -388,7 +388,7 @@ void DynamicArray<T>::InsertAt(int index, const T& value) {
 }
 
 template <typename T>
-void DynamicArray<T>::InsertAt(int index, const T&& value) {
+void DynamicArray<T>::InsertAt(int index, T&& value) {
     if (index < 0 || index > Size) throw std::out_of_range("Index out of range");
     if (Size >= capacity) {
         int newCapacity = (capacity == 0) ? 1 : capacity * 2;

@@ -15,7 +15,7 @@ template <typename T, bool IsConst>
 class AdaptIterator : public IIterator<T, IsConst> {
     public:
         using value_type = typename IIterator<T, IsConst>::value_type;
-        using pointer = std::conditional_t<IsConst, const T*, T*>;
+        using pointer = typename IIterator<T, IsConst>::pointer;
         using reference = typename IIterator<T, IsConst>::reference;
         using difference_type = typename IIterator<T, IsConst>::difference_type;
         using iterator_category = std::random_access_iterator_tag;
@@ -245,7 +245,7 @@ class AdaptiveSequence : public Container<T>, public IEnumerable<T> {
             }
             Size++;
         }
-        void Append(const T&& value) override {
+        void Append(T&& value) override {
             if (correctRight == 0 && correctLeft == 0) Resize(Size);
             if (correctLeft >= correctRight) {
                 for (int i = 0; i < Size; i++) {
@@ -276,7 +276,7 @@ class AdaptiveSequence : public Container<T>, public IEnumerable<T> {
             }
             Size++;
         }
-        void Prepend(const T&& value) override {
+        void Prepend(T&& value) override {
             if (correctRight == 0 && correctLeft == 0) Resize(Size);
             if (correctLeft >= correctRight) {
                 Data[correctLeft - 1] = std::move(value);
@@ -297,7 +297,7 @@ class AdaptiveSequence : public Container<T>, public IEnumerable<T> {
             if (index >= Size || index < 0) throw std::out_of_range("Index out of range");
             Data[correctLeft + index] = value;
         }
-        void Set(int index, const T&& value) override {
+        void Set(int index, T&& value) override {
             if (!Data || Size <= 0) throw std::out_of_range("Array is empty");
             if (index >= Size || index < 0) throw std::out_of_range("Index out of range");
             Data[correctLeft + index] = std::move(value);
@@ -322,7 +322,7 @@ class AdaptiveSequence : public Container<T>, public IEnumerable<T> {
             }
             Size++;
         }
-        void InsertAt(int index, const T&& value) override {
+        void InsertAt(int index, T&& value) override {
             if (index < 0 || index > Size) throw std::out_of_range("Index out of range");
             if (correctRight == 0 && correctLeft == 0) Resize(Size);
             if (correctLeft >= correctRight) {

@@ -10,13 +10,13 @@ class Container {
         virtual int GetSize() const = 0;
 
         virtual void Append(const T& value) = 0;
-        virtual void Append(const T&& value) = 0;
+        virtual void Append(T&& value) = 0;
         virtual void Prepend(const T& value) = 0;
-        virtual void Prepend(const T&& value) = 0;
+        virtual void Prepend(T&& value) = 0;
         virtual void Set(int index, const T& value) = 0;
-        virtual void Set(int index, const T&& value) = 0;
+        virtual void Set(int index, T&& value) = 0;
         virtual void InsertAt(int index, const T& value) = 0;
-        virtual void InsertAt(int index, const T&& value) = 0;
+        virtual void InsertAt(int index, T&& value) = 0;
         virtual void Resize(int size) = 0;
         virtual void RemoveAt(int index) = 0;
 

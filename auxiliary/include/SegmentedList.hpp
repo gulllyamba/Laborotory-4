@@ -14,7 +14,7 @@ template <typename T, bool IsConst>
 class SegmentedListIterator : public IIterator<T, IsConst> {
     public:
         using value_type = typename IIterator<T, IsConst>::value_type;
-        using pointer = std::conditional_t<IsConst, const T*, T*>;
+        using pointer = typename IIterator<T, IsConst>::pointer;
         using reference = typename IIterator<T, IsConst>::reference;
         using difference_type = typename IIterator<T, IsConst>::difference_type;
         using iterator_category = std::bidirectional_iterator_tag;
@@ -222,7 +222,7 @@ class SegmentedList : public Container<T>, public IEnumerable<T> {
             }
         }
 
-        SegmentedList<T>& operator=(const SegmentedList& other) {
+        SegmentedList& operator=(const SegmentedList& other) {
             if (this != &other) {
                 delete Segments;
                 Segments_Size = other.Segments_Size;
@@ -234,7 +234,8 @@ class SegmentedList : public Container<T>, public IEnumerable<T> {
             }
             return *this;
         }
-        SegmentedList<T>& operator=(SegmentedList<T>&& other) {
+
+        SegmentedList& operator=(SegmentedList&& other) {
             if (this != &other) {
                 delete Segments;
                 Elements_Size = other.Elements_Size;
@@ -294,7 +295,7 @@ class SegmentedList : public Container<T>, public IEnumerable<T> {
             }
             Elements_Size++;
         }
-        void Append(const T&& value) override {
+        void Append(T&& value) override {
             if (Segments_Size >= GetCapacity()) Reserve(Segments_Size * 2);
             if (Segments_Size > 0 && (*Segments)[Segments_Size - 1].Array_Size < MAX_SEGMENT_CAPACITY) {
                 (*Segments)[Segments_Size - 1].Array->Append(std::move(value));
@@ -329,7 +330,7 @@ class SegmentedList : public Container<T>, public IEnumerable<T> {
             }
             Elements_Size++;
         }
-        void Prepend(const T&& value) override {
+        void Prepend(T&& value) override {
             if (Segments_Size >= GetCapacity()) Reserve(Segments_Size * 2);
             if (Segments_Size > 0 && (*Segments)[0].Array_Size < MAX_SEGMENT_CAPACITY) {
                 (*Segments)[0].Array->Prepend(std::move(value));
@@ -359,7 +360,7 @@ class SegmentedList : public Container<T>, public IEnumerable<T> {
                 }
             }
         }
-        void Set(int index, const T&& value) override {
+        void Set(int index, T&& value) override {
             if (!Segments || Segments_Size <= 0) throw std::out_of_range("SegmentedList is empty");
             if (index >= Elements_Size || index < 0) throw std::out_of_range("Index out of range");
             for (int i = 0; i < Segments_Size; i++) {
@@ -410,7 +411,7 @@ class SegmentedList : public Container<T>, public IEnumerable<T> {
             }
             Elements_Size++;
         } 
-        void InsertAt(int index, const T&& value) override {
+        void InsertAt(int index, T&& value) override {
             if (!Segments || Segments_Size < 0) throw std::out_of_range("SegmentedList is empty");
             if (index > Elements_Size || index < 0) throw std::out_of_range("Index out of range");
             if (Segments_Size >= GetCapacity()) Reserve(Segments_Size * 2);

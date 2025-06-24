@@ -22,7 +22,7 @@ template <typename T, bool IsConst>
 class PQIterator : public IIterator<T, IsConst> {
     public:
         using value_type = typename IIterator<T, IsConst>::value_type;
-        using pointer = std::conditional_t<IsConst, const T*, T*>;
+        using pointer = typename IIterator<T, IsConst>::pointer;
         using reference = typename IIterator<T, IsConst>::reference;
         using difference_type = typename IIterator<T, IsConst>::difference_type;
         using iterator_category = std::bidirectional_iterator_tag;
@@ -384,7 +384,6 @@ class PriorityQueue : public IEnumerable<T> {
         friend class PQIterator;
 
         void UpdateParent(PQ_Node<T>* node, PQ_Node<T>* newParent) {
-            if (node == root) node->parent = nullptr;
             if (node) {
                 node->parent = newParent;
             }

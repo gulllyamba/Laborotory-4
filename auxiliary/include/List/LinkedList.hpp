@@ -34,7 +34,7 @@ template <typename T, bool IsConst>
 class ListIterator : public IIterator<T, IsConst> {
     public:
         using value_type = typename IIterator<T, IsConst>::value_type;
-        using pointer = std::conditional_t<IsConst, const T*, T*>;
+        using pointer = typename IIterator<T, IsConst>::pointer;
         using reference = typename IIterator<T, IsConst>::reference;
         using difference_type = typename IIterator<T, IsConst>::difference_type;
         using iterator_category = std::bidirectional_iterator_tag;
@@ -82,13 +82,6 @@ class ListIterator : public IIterator<T, IsConst> {
             ListIterator temp = *this;
             --(*this);
             return temp;
-        }
-
-        bool operator==(const ListIterator& other) const {
-            return current == other.current;
-        }
-        bool operator!=(const ListIterator& other) const {
-            return !(*this == other);
         } 
 
         template <bool OtherConst>
@@ -157,13 +150,13 @@ class LinkedList : public Container<T>, public IEnumerable<T> {
         int GetSize() const override;
 
         void Append(const T& value) override;
-        void Append(const T&& value) override;
+        void Append(T&& value) override;
         void Prepend(const T& value) override;
-        void Prepend(const T&& value) override;
+        void Prepend(T&& value) override;
         void Set(int index, const T& value) override;
-        void Set(int index, const T&& value) override;
+        void Set(int index, T&& value) override;
         void InsertAt(int index, const T& value) override;
-        void InsertAt(int index, const T&& value) override;
+        void InsertAt(int index, T&& value) override;
         void Resize(int size) override;
         void RemoveAt(int index) override;
 
@@ -378,7 +371,7 @@ void LinkedList<T>::Append(const T& value) {
 }
 
 template <typename T>
-void LinkedList<T>::Append(const T&& value) {
+void LinkedList<T>::Append(T&& value) {
     TNode<T>* new_Node = new TNode<T>(std::move(value));
     if (!Head) {
         Head = new_Node;
@@ -408,7 +401,7 @@ void LinkedList<T>::Prepend(const T& value) {
 }
 
 template <typename T>
-void LinkedList<T>::Prepend(const T&& value) {
+void LinkedList<T>::Prepend(T&& value) {
     TNode<T>* new_Node = new TNode<T>(std::move(value));
     if (Head == nullptr) {
         Head = new_Node;
@@ -443,7 +436,7 @@ void LinkedList<T>::Set(int index, const T& value) {
 }
 
 template <typename T>
-void LinkedList<T>::Set(int index, const T&& value) {
+void LinkedList<T>::Set(int index, T&& value) {
     if (!Head || !Last || Size <= 0) return;
     if (index < 0 || index >= Size) throw std::out_of_range("Index out of range");
     TNode<T>* Actual_Node = nullptr;
@@ -494,7 +487,7 @@ void LinkedList<T>::InsertAt(int index, const T& value) {
 }
 
 template <typename T>
-void LinkedList<T>::InsertAt(int index, const T&& value) {
+void LinkedList<T>::InsertAt(int index, T&& value) {
     if (index < 0 || index > Size) throw std::out_of_range("Index out of range");
     if (index == 0) Prepend(std::move(value));
     else if (index == Size) Append(std::move(value));

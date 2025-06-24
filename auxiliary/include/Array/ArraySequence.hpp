@@ -11,7 +11,7 @@ template <typename T, bool IsConst>
 class ArraySequenceIterator : public IIterator<T, IsConst> {
     public:
         using value_type = typename IIterator<T, IsConst>::value_type;
-        using pointer = std::conditional_t<IsConst, const T*, T*>;
+        using pointer = typename IIterator<T, IsConst>::pointer;
         using reference = typename IIterator<T, IsConst>::reference;
         using difference_type = typename IIterator<T, IsConst>::difference_type;
         using iterator_category = std::random_access_iterator_tag;
@@ -76,7 +76,7 @@ class ArraySequenceIterator : public IIterator<T, IsConst> {
             if (!array || n < 0 || current + n > array->cend() || current + n < array->cbegin()) throw std::out_of_range("Iterator out of range");
             return ArraySequenceIterator(array, current + n);
         }
-        ArraySequenceIterator operator-(difference_type n) const {
+        ArraySequenceIterator operator-(difference_type n) {
             return *this + (-n);
         }
         difference_type operator-(const ArraySequenceIterator& other) const {

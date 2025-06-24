@@ -273,10 +273,11 @@ int main() {
     // std::cout << "\n\n";
 
     // std::cout << "Iterator--: ";
-    // for (auto it = --queue->end(); it != queue->begin(); --it) {
+    // auto it = --queue->end();
+    // for (; it != queue->begin(); --it) {
     //     std::cout << *it << " ";
     // }
-    // std::cout << *queue->begin() << "\n\n";
+    // std::cout << *it << "\n\n";
 
     // PriorityQueue<int>* sub = queue->GetSubQueue(1, 4);
     // std::cout << "Sub: " << sub->toString() << "\n\n";
